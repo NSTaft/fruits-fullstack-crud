@@ -27,3 +27,23 @@ mongoose.connection
   .on("open", () => console.log("Connected to Mongoose"))
   .on("close", () => console.log("Disconnected from Mongoose"))
   .on("error", (error) => console.log(error));
+
+
+  ////////////////////////////////////////////////
+// Our Models
+////////////////////////////////////////////////
+// pull schema and model from mongoose
+// const Schema = mongoose.Schema
+// const model = mongoose.model
+// is equal to:
+const { Schema, model } = mongoose
+
+// Make fruits Schema
+const fruitsSchema = new Schema({
+    name: String,
+    color: String,
+    readyToEat: Boolean,
+})
+
+// Make Fruit model
+const Fruit = model("Fruit", fruitsSchema)
