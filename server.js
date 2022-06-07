@@ -24,12 +24,12 @@ mongoose.connect(DATABASE_URL, CONFIG)
 
 // Events for when connection opens/disconnects/errors
 mongoose.connection
-  .on("open", () => console.log("Connected to Mongoose"))
-  .on("close", () => console.log("Disconnected from Mongoose"))
-  .on("error", (error) => console.log(error));
+    .on("open", () => console.log("Connected to Mongoose"))
+    .on("close", () => console.log("Disconnected from Mongoose"))
+    .on("error", (error) => console.log(error));
 
 
-  ////////////////////////////////////////////////
+////////////////////////////////////////////////
 // Our Models
 ////////////////////////////////////////////////
 // pull schema and model from mongoose
@@ -52,7 +52,7 @@ const Fruit = model("Fruit", fruitsSchema)
 /////////////////////////////////////////////////
 // Create our Express Application Object Bind Liquid Templating Engine
 /////////////////////////////////////////////////
-const app = require("liquid-express-views")(express(), {root: [path.resolve(__dirname, 'views/')]})
+const app = require("liquid-express-views")(express(), { root: [path.resolve(__dirname, 'views/')] })
 
 
 /////////////////////////////////////////////////////
@@ -70,9 +70,35 @@ app.get('/', (req, res) => {
     res.send("Your server is running... better catch it.")
 })
 
+app.get("/fruits/seed", (req, res) => {
+    // array of starter fruits
+    const startFruits = [
+        { name: "Orange", color: "orange", readyToEat: false },
+        { name: "Grape", color: "purple", readyToEat: false },
+        { name: "Banana", color: "orange", readyToEat: false },
+        { name: "Strawberry", color: "red", readyToEat: false },
+        { name: "Coconut", color: "brown", readyToEat: false },
+    ];
+
+    // Delete all fruits
+    Fruit.deleteMany({}).then((data) => {
+        // Seed Starter Fruits
+        Fruit.create(startFruits).then((data) => {
+            // send created fruits as response to confirm creation
+            res.json(data);
+        });
+    });
+});
+
+// Index route
+app.get('/fruits', async (req,res) => {
+    const fruits = await Fruit.find({})
+    res.render('fruits/index.liquid', {fruits})
+})
+
 
 //////////////////////////////////////////////
 // Server Listener
 //////////////////////////////////////////////
 const PORT = process.env.PORT
-app.listen(PORT, () => console.log (`Now listening on port ${PORT}`))
+app.listen(PORT, () => console.log(`Now listening on port ${PORT}`))
