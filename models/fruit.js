@@ -18,6 +18,7 @@ const fruitsSchema = new Schema({
     name: String,
     color: String,
     readyToEat: Boolean,
+    username: String,
 })
 
 // Make Fruit model // the " " argument becomes a collection
